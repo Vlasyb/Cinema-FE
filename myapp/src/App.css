@@ -6,6 +6,26 @@ html {
 	height: 100%;
 }
 
+.HomePageHeader {
+	transform: translateY(0px);
+	animation: float 8s ease-out infinite;
+	font-family: "Poppins";
+	text-align: center;
+	font-size: 5em;
+}
+
+@keyframes float {
+	0% {
+		transform: translateY(0px);
+	}
+	50% {
+		transform: translateY(-40px);
+	}
+	100% {
+		transform: translateY(0px);
+	}
+}
+
 .App {
   text-align: center;
 }
