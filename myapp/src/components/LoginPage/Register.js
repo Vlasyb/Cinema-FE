@@ -23,7 +23,7 @@ import CircularProgress from "@mui/material/CircularProgress"
 import { useNavigate } from "react-router-dom"
 import { useSelector, useDispatch } from "react-redux"
 
-export const Login = () => {
+export const Register = () => {
 	const [usernameInput, setUsernameInput] = useState("")
 	const [passwordInput, setPasswordInput] = useState("")
 	const [message, setMessage] = useState("")
@@ -31,7 +31,6 @@ export const Login = () => {
 	const [isLoading, setIsLoading] = useState(false)
 	const port = "8040"
 	const navigate = useNavigate()
-	const dispatch = useDispatch()
 
 	const handleSubmit = async (e) => {
 		e.preventDefault()
@@ -44,22 +43,27 @@ export const Login = () => {
 		try {
 			console.log(userCredentials)
 			const { data: res } = await axios.post(
-				`http://localhost:${port}/users/login`,
+				`http://localhost:${port}/users/register`,
 				userCredentials,
 				{ withCredentials: true }
 			)
-			//TODO : add useReducer to save logged user
-			dispatch({ type: "SAVE_LOGGED_USER", payload: res.user })
-			localStorage.setItem("loggedUser", JSON.stringify(res.user))
-			setMessage(res.message)
+			console.log(res)
+			if (res === "Successfully set password") {
+				setMessage(res) //returned not as json.message
+				setTimeout(() => {
+					navigate("/login")
+				}, 1500)
+			} else {
+				setErrorMessage(res)
+				setIsLoading(false)
+			}
 			setTimeout(() => {
-				// window.location.href = "/"
-				navigate("/")
-			}, 1500)
+				setErrorMessage("")
+			}, 2500)
 		} catch (err) {
 			setIsLoading(false)
 			console.log("err ", err)
-			setErrorMessage(err.response.data.message)
+			setErrorMessage(err.response)
 			setTimeout(() => {
 				setErrorMessage("")
 			}, 2500)
@@ -73,9 +77,8 @@ export const Login = () => {
 				variant="h2"
 				color="initial"
 			>
-				Please Sign In
+				Create An Account
 			</Typography>
-			{/* component="main" */}
 			<Container maxWidth="xs">
 				<Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
 					<TextField
@@ -102,23 +105,14 @@ export const Login = () => {
 							setPasswordInput(e.target.value)
 						}}
 					/>
-					<FormControlLabel
-						control={<Checkbox value="remember" color="primary" />}
-						label="Remember me"
-					/>
 					<Button
 						type="submit"
 						fullWidth
 						variant="contained"
 						sx={{ mt: 3, mb: 2, backgroundColor: "#008080" }}
 					>
-						Sign In
+						Create
 					</Button>
-					<Grid container sx={{ alignItems: "center" }}>
-						<Link href="/register" variant="body3">
-							{"New User? Create Account"}
-						</Link>
-					</Grid>
 				</Box>
 			</Container>
 			{message && <Success message={message} />}

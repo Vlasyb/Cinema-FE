@@ -1,4 +1,5 @@
 const initialValue = {
+	loggedUser: {},
 	users: [],
 	members: [],
 	movies: [],
@@ -19,6 +20,11 @@ const cinemaChanger = (state = initialValue, action) => {
 		case "LOAD_SUBSCRIPTIONS": {
 			break
 		}
+		case "SAVE_LOGGED_USER": {
+			return { ...state, loggedUser: action.payload }
+		}
+		default:
+			return state
 	}
 }
 

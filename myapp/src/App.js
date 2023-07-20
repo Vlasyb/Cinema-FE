@@ -10,8 +10,10 @@ import { Subscriptions } from "./components/Subscriptions/Subscriptions"
 import { Brief } from "./components/HomePage/Brief"
 import { Tutorial } from "./components/HomePage/Tutorial"
 import { Login } from "./components/LoginPage/Login"
+import { Register } from "./components/LoginPage/Register"
 import { About } from "./components/HomePage/About"
-import { NotFound } from "./components/NotFound"
+import { Error } from "./components/Error"
+import { Success } from "./components/Success"
 
 function App() {
 	const location = useLocation()
@@ -31,10 +33,10 @@ function App() {
 				<Route path="/users" element={<Users />} />
 				<Route path="/about" element={<About />} />
 				<Route path="/login" element={<Login />} />
+				<Route path="/register" element={<Register />} />
 				{/* <Route path="/editproduct/:id" element={<EditProduct />} />
 					<Route path="/editcustomer/:id" element={<EditCustomer />} /> */}
-				{/* <Route path="*" element={<NotFound />} /> */}
-				<Route path="*" element={<NotFound />} />
+				<Route path="*" element={<Error message="Page Not Found" />} />
 			</Routes>
 
 			{location.pathname == "/" && (

@@ -1,4 +1,6 @@
-import React from "react"
+import React, { useEffect, useState } from "react"
+import { useCookies } from "react-cookie"
+
 import { Link } from "react-router-dom"
 import {
 	AppBar,
@@ -10,8 +12,35 @@ import {
 } from "@mui/material"
 import HomeIcon from "@mui/icons-material/Home"
 import ExitToAppIcon from "@mui/icons-material/ExitToApp"
+import axios from "axios"
+import { useDispatch, useSelector } from "react-redux"
 
 export const NavBar = () => {
+	const port = "8040"
+	const dispatch = useDispatch()
+	const loggedUserStore = useSelector((state) => state.loggedUser)
+
+	const [loggedUser, setLoggedUser] = useState({})
+
+	const handleLogout = async (e) => {
+		try {
+			const response = await axios.get(
+				`http://localhost:${port}/users/logout`,
+				{ withCredentials: true }
+			)
+			dispatch({ type: "SAVE_LOGGED_USER", payload: {} })
+			localStorage.removeItem("loggedUser")
+		} catch (err) {
+			console.error("err ", err)
+		}
+	}
+
+	useEffect(() => {
+		console.log("useEffected")
+		const storedUser = localStorage.getItem("loggedUser")
+		setLoggedUser(storedUser ? JSON.parse(storedUser) : {})
+	}, [loggedUserStore]) // localStorage doesnt render by itself like useState and store
+
 	return (
 		<div>
 			<AppBar
@@ -41,7 +70,8 @@ export const NavBar = () => {
 						variant="h6"
 						color="white"
 					>
-						Hello Unknown
+						Hello {loggedUser.firstName || "Unknown"}
+						{/* Hello Unknown */}
 					</Typography>
 					<Stack direction="row" spacing={7}>
 						<Button
@@ -103,6 +133,7 @@ export const NavBar = () => {
 						startIcon={<ExitToAppIcon />}
 						variant="text"
 						color="inherit"
+						onClick={handleLogout}
 					>
 						Logout
 					</Button>

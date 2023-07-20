@@ -36,21 +36,23 @@ export const Brief = () => {
 						component={Link}
 						to="/about"
 						sx={{
-							backgroundColor: "#333333",
+							backgroundColor: "#008080",
 							position: "absolute",
 							color: "white",
 							fontFamily: "Poppins",
 							width: "25%",
-							height: "3.5em",
+							height: "3.3em",
 							top: "17.5em",
 							fontSize: "20px",
 							fontWeight: "600",
 							left: "50%",
 							transform: "translateX(-50%)",
-							// opacity: "0.9",
+							opacity: "0.95",
 							":hover": {
 								boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-								backgroundColor: "black",
+								backgroundColor: "#008080",
+								opacity: "1",
+								border: "3px solid black",
 							},
 						}}
 					>
