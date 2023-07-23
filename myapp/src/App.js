@@ -14,6 +14,9 @@ import { Register } from "./components/LoginPage/Register"
 import { About } from "./components/HomePage/About"
 import { Error } from "./components/Error"
 import { Success } from "./components/Success"
+import { EditUser } from "./components/Users/EditUser"
+import { EditMovie } from "./components/Movies/EditMovie"
+import { EditSubscription } from "./components/Subscriptions/EditSubscription"
 
 function App() {
 	const location = useLocation()
@@ -34,8 +37,9 @@ function App() {
 				<Route path="/about" element={<About />} />
 				<Route path="/login" element={<Login />} />
 				<Route path="/register" element={<Register />} />
-				{/* <Route path="/editproduct/:id" element={<EditProduct />} />
-					<Route path="/editcustomer/:id" element={<EditCustomer />} /> */}
+				<Route path="/editmovie/:id" element={<EditMovie />} />
+				<Route path="/edituser/:username" element={<EditUser />} />
+				<Route path="/editsubscription/:id" element={<EditSubscription />} />
 				<Route path="*" element={<Error message="Page Not Found" />} />
 			</Routes>
 

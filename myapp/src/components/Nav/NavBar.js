@@ -36,7 +36,6 @@ export const NavBar = () => {
 	}
 
 	useEffect(() => {
-		console.log("useEffected")
 		const storedUser = localStorage.getItem("loggedUser")
 		setLoggedUser(storedUser ? JSON.parse(storedUser) : {})
 	}, [loggedUserStore]) // localStorage doesnt render by itself like useState and store
