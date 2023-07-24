@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import {
 	Button,
 	Checkbox,
@@ -9,12 +9,16 @@ import {
 	Typography,
 } from "@mui/material"
 
-export const AddUser = () => {
+export const AddUser = ({ onCancel }) => {
 	const [firstName, setFirstName] = useState("")
 	const [lastName, setLastName] = useState("")
 	const [username, setUsername] = useState("")
 	const [sessionTimeout, setSessionTimeout] = useState("")
 	const [permissions, setPermissions] = useState([])
+
+	const handleCancelClick = () => {
+		onCancel("all") // Call the onCancel function passed from the parent component
+	}
 
 	const handleSave = () => {
 		console.log("Saving")
@@ -165,8 +169,7 @@ export const AddUser = () => {
 				<Button
 					variant="outlined"
 					className="cancel-button"
-					component={Link}
-					to={`/users`}
+					onClick={handleCancelClick}
 					sx={{
 						color: "#008080",
 						borderColor: "#008080",

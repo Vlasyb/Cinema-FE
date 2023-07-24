@@ -15,13 +15,24 @@ import {
 	Checkbox,
 	Copyright,
 } from "@mui/material"
+import { AllMovies } from "./AllMovies"
+import { AddMovie } from "./AddMovie"
+import { useSelector, useDispatch } from "react-redux"
 
 export const Movies = () => {
+	const dispatch = useDispatch()
+	const movies = useSelector((state) => state.movies)
 	const [addMovieBtn, setAddMovieBtn] = useState(false)
 	const [allMovieBtn, setAllMovieBtn] = useState(false)
 
 	const changeShow = (buttonClicked) => {
 		if (buttonClicked == "all") {
+			if (movies.length === 0) {
+				console.log("dispatched load movies, members, subs")
+				// dispatch({ type: "LOAD_MOVIES" })
+				// dispatch({ type: "LOAD_MEMBERS" })
+				// dispatch({ type: "LOAD_SUBSCRIPTIONS" })
+			}
 			setAllMovieBtn(true)
 			setAddMovieBtn(false)
 		} else {
@@ -65,6 +76,8 @@ export const Movies = () => {
 					Add Movie
 				</Button>
 			</Container>
+			{allMovieBtn && <AllMovies moviesPromise={movies} />}
+			{addMovieBtn && <AddMovie />}
 		</div>
 	)
 }

@@ -20,17 +20,14 @@ import { AddUser } from "./AddUser"
 import { useSelector, useDispatch } from "react-redux"
 
 export const Users = () => {
-	const dispatch = useDispatch()
+	// const dispatch = useDispatch()
 	const users = useSelector((state) => state.users)
 	const [addUserBtn, setAddUserBtn] = useState(false)
 	const [allUserBtn, setAllUserBtn] = useState(false)
 
 	const changeShow = (buttonClicked) => {
+		console.log("ChangeShow activated")
 		if (buttonClicked == "all") {
-			if (users.length === 0) {
-				console.log("dispatched load users")
-				dispatch({ type: "LOAD_USERS" })
-			}
 			setAllUserBtn(true)
 			setAddUserBtn(false)
 		} else {
@@ -75,7 +72,7 @@ export const Users = () => {
 				</Button>
 			</Container>
 			{allUserBtn && <AllUsers usersPromise={users} />}
-			{addUserBtn && <AddUser />}
+			{addUserBtn && <AddUser onCancel={changeShow} />}
 		</div>
 	)
 }

@@ -48,12 +48,9 @@ export const Login = () => {
 				userCredentials,
 				{ withCredentials: true }
 			)
-			//TODO : add useReducer to save logged user
 			dispatch({ type: "SAVE_LOGGED_USER", payload: res.user })
-			localStorage.setItem("loggedUser", JSON.stringify(res.user))
 			setMessage(res.message)
 			setTimeout(() => {
-				// window.location.href = "/"
 				navigate("/")
 			}, 1500)
 		} catch (err) {

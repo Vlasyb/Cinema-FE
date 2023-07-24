@@ -29,16 +29,23 @@ export const NavBar = () => {
 				{ withCredentials: true }
 			)
 			dispatch({ type: "SAVE_LOGGED_USER", payload: {} })
-			localStorage.removeItem("loggedUser")
+			window.location.reload()
 		} catch (err) {
 			console.error("err ", err)
 		}
 	}
 
 	useEffect(() => {
-		const storedUser = localStorage.getItem("loggedUser")
-		setLoggedUser(storedUser ? JSON.parse(storedUser) : {})
-	}, [loggedUserStore]) // localStorage doesnt render by itself like useState and store
+		// Check if loggedUserStore is a Promise
+		if (typeof loggedUserStore.then === "function") {
+			loggedUserStore.then((data) => {
+				setLoggedUser(data)
+			})
+		} else {
+			// If it's not a Promise, directly set the state
+			setLoggedUser(loggedUserStore)
+		}
+	}, [loggedUserStore])
 
 	return (
 		<div>
@@ -69,7 +76,7 @@ export const NavBar = () => {
 						variant="h6"
 						color="white"
 					>
-						Hello {loggedUser.firstName || "Unknown"}
+						Hello {loggedUser.username || "Unknown"}
 						{/* Hello Unknown */}
 					</Typography>
 					<Stack direction="row" spacing={7}>

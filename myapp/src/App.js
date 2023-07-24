@@ -1,7 +1,7 @@
 import "./App.css"
 import { Route, Routes, useLocation } from "react-router-dom"
 import { useEffect } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { Typography } from "@mui/material"
 import { NavBar } from "./components/Nav/NavBar"
 import { Users } from "./components/Users/Users"
@@ -20,6 +20,55 @@ import { EditSubscription } from "./components/Subscriptions/EditSubscription"
 
 function App() {
 	const location = useLocation()
+	const dispatch = useDispatch()
+	const loggedUser = useSelector((state) => state.loggedUser)
+	const store = useSelector((state) => state)
+
+	useEffect(() => {
+		try {
+			dispatch({ type: "VERIFY_AND_GET_LOGGED_USER" })
+		} catch (err) {
+			console.error("Error dispatching action:", err)
+		}
+	}, [])
+
+	const handleLoggedUser = (loggedUserResolved) => {
+		// Handle permissions based on the logged-in user
+		if (loggedUserResolved.username === "admin") {
+			dispatch({ type: "LOAD_MOVIES" })
+			dispatch({ type: "LOAD_USERS" })
+			dispatch({ type: "LOAD_MEMBERS" })
+			dispatch({ type: "LOAD_SUBSCRIPTIONS" })
+		} else {
+			if (loggedUserResolved.permissions?.includes("view movies")) {
+				dispatch({ type: "LOAD_MOVIES" })
+			}
+			if (loggedUserResolved.permissions?.includes("view subscriptions")) {
+				dispatch({ type: "LOAD_MEMBERS" })
+				dispatch({ type: "LOAD_SUBSCRIPTIONS" })
+			}
+		}
+	}
+
+	useEffect(() => {
+		console.log("App UseEffect with dispatches -------------------")
+		if (typeof loggedUser.then === "function") {
+			// The loggedUser is a promise, so wait for it to resolve
+			loggedUser.then((loggedUserResolved) => {
+				console.log("logged user ", loggedUserResolved)
+				if (loggedUserResolved) {
+					handleLoggedUser(loggedUserResolved)
+				}
+			})
+		} else if (loggedUser && Object.keys(loggedUser).length > 0) {
+			// The loggedUser is not a promise and is a non-empty object
+			console.log("loggedUser not a promise and not {}")
+			handleLoggedUser(loggedUser)
+		} else {
+			console.log("Logged user is null or not yet resolved")
+		}
+	}, [loggedUser])
+
 	return (
 		<div>
 			<NavBar />
