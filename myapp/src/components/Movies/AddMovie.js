@@ -2,11 +2,15 @@ import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Button, Container, TextField, Typography, Box } from "@mui/material"
 
-export const AddMovie = () => {
+export const AddMovie = ({ onCancel }) => {
 	const [name, setName] = useState("")
 	const [genres, setGenres] = useState([])
 	const [imageURL, setImageURL] = useState("")
 	const [premiered, setPremiered] = useState("")
+
+	const handleCancelClick = () => {
+		onCancel("all") // Call the onCancel function passed from the parent component
+	}
 
 	const handleSave = () => {
 		// Create the movie object and call the onSave function
@@ -100,6 +104,7 @@ export const AddMovie = () => {
 				<Button
 					variant="outlined"
 					className="cancel-button"
+					onClick={handleCancelClick}
 					component={Link}
 					to={`/movies`}
 					sx={{

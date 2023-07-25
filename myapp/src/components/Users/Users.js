@@ -26,7 +26,6 @@ export const Users = () => {
 	const [allUserBtn, setAllUserBtn] = useState(false)
 
 	const changeShow = (buttonClicked) => {
-		console.log("ChangeShow activated")
 		if (buttonClicked == "all") {
 			setAllUserBtn(true)
 			setAddUserBtn(false)

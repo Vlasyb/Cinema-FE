@@ -17,22 +17,27 @@ import {
 } from "@mui/material"
 import { useSelector, useDispatch } from "react-redux"
 import { Movie } from "./Movie"
+import axios from "axios"
 
 export const AllMovies = ({ moviesPromise }) => {
 	const [movies, setMovies] = useState([])
 	const [searchTerm, setSearchTerm] = useState("")
+	const port = 8040
 
 	const handleSearch = () => {
-		// Call the backend function to filter movies based on the search term
-		// For example using fetch or axios library:
-		// fetch(`/api/movies?search=${searchTerm}`)
-		//   .then(response => response.json())
-		//   .then(data => {
-		//     setMovies(data);
-		//   })
-		//   .catch(error => {
-		//     // Handle errors if any
-		//   });
+		if (searchTerm != "") {
+			axios
+				.get(`http://localhost:${port}/movies/findmovie/${searchTerm}`, {
+					withCredentials: true,
+				})
+				.then((response) => {
+					setMovies(response.data)
+				})
+				.catch((error) => {
+					// Handle errors if any
+					console.error("Error fetching filtered movies:", error)
+				})
+		}
 	}
 
 	//understand how the promise works
@@ -70,7 +75,6 @@ export const AllMovies = ({ moviesPromise }) => {
 				>
 					<TextField
 						label="Find movie"
-						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						sx={{
 							// what is inside the input

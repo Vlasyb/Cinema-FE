@@ -27,12 +27,6 @@ export const Movies = () => {
 
 	const changeShow = (buttonClicked) => {
 		if (buttonClicked == "all") {
-			if (movies.length === 0) {
-				console.log("dispatched load movies, members, subs")
-				// dispatch({ type: "LOAD_MOVIES" })
-				// dispatch({ type: "LOAD_MEMBERS" })
-				// dispatch({ type: "LOAD_SUBSCRIPTIONS" })
-			}
 			setAllMovieBtn(true)
 			setAddMovieBtn(false)
 		} else {
@@ -77,7 +71,7 @@ export const Movies = () => {
 				</Button>
 			</Container>
 			{allMovieBtn && <AllMovies moviesPromise={movies} />}
-			{addMovieBtn && <AddMovie />}
+			{addMovieBtn && <AddMovie onCancel={changeShow} />}
 		</div>
 	)
 }
