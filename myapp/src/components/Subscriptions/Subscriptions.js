@@ -15,8 +15,13 @@ import {
 	Checkbox,
 	Copyright,
 } from "@mui/material"
+import { AllMembers } from "./AllMembers"
+import { AddMember } from "./AddMember"
+import { useSelector, useDispatch } from "react-redux"
 
 export const Subscriptions = () => {
+	const dispatch = useDispatch()
+	const members = useSelector((state) => state.members)
 	const [addMemberBtn, setAddMemberBtn] = useState(false)
 	const [allMemberBtn, setAllMemberBtn] = useState(false)
 
@@ -65,6 +70,8 @@ export const Subscriptions = () => {
 					Add Member
 				</Button>
 			</Container>
+			{allMemberBtn && <AllMembers moviesPromise={members} />}
+			{addMemberBtn && <AddMember onCancel={changeShow} />}
 		</div>
 	)
 }

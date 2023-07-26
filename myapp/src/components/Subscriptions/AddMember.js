@@ -1,34 +1,41 @@
-import { useState } from "react"
+import React, { useState } from "react"
 import { Link } from "react-router-dom"
-import { Button, Container, TextField, Typography, Box } from "@mui/material"
+import {
+	Button,
+	Checkbox,
+	Container,
+	FormControlLabel,
+	TextField,
+	Typography,
+} from "@mui/material"
 
-export const AddMovie = ({ onCancel }) => {
+export const AddMember = ({ onCancel }) => {
 	const [name, setName] = useState("")
-	const [genres, setGenres] = useState([])
-	const [image, setImage] = useState("")
-	const [premiered, setPremiered] = useState("")
+	const [email, setEmail] = useState("")
+	const [city, setCity] = useState("")
+	const [permissions, setPermissions] = useState([])
 
 	const handleCancelClick = () => {
 		onCancel("all") // Call the onCancel function passed from the parent component
 	}
 
 	const handleSave = () => {
-		// Create the movie object and call the onSave function
-		const newMovie = {
+		console.log("Saving")
+		// Create the member object and call the onSave function
+		const newMember = {
 			name,
-			genres,
-			image,
-			premiered,
+			email,
+			city,
+			permissions,
 		}
-
-		// TODO: Send a POST request to create a new movie in the database
+		// TODO: Send a POST request to create a new member in the database
 		// For example using fetch or axios library:
-		// fetch('/api/movies', {
+		// fetch('/api/members', {
 		//   method: 'POST',
 		//   headers: {
 		//     'Content-Type': 'application/json',
 		//   },
-		//   body: JSON.stringify(newMovie),
+		//   body: JSON.stringify(newMember),
 		// })
 		//   .then(response => response.json())
 		//   .then(data => {
@@ -41,7 +48,7 @@ export const AddMovie = ({ onCancel }) => {
 
 	const handleSubmit = (e) => {
 		e.preventDefault() // Prevent the default form submission behavior
-		handleSave() // Call the handleSave function to create a new movie
+		handleSave() // Call the handleSave function to create a new member
 	}
 
 	return (
@@ -59,11 +66,19 @@ export const AddMovie = ({ onCancel }) => {
 				boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
 				padding: 2,
 				backgroundColor: "#f0f0f0",
-				"& .MuiTextField-root": { marginBottom: 2 },
+				"& .MuiTextField-root": {
+					marginBottom: 2,
+				},
+				"& .permissions-checkbox": {
+					marginBottom: 1,
+				},
 				"& .button-group": {
 					display: "flex",
 					justifyContent: "flex-end",
-					mt: 3,
+					marginTop: 2,
+				},
+				"& .cancel-button": {
+					marginRight: 2,
 				},
 			}}
 		>
@@ -72,41 +87,35 @@ export const AddMovie = ({ onCancel }) => {
 				gutterBottom
 				sx={{ color: "#008080", textAlign: "center" }}
 			>
-				Add Movie
+				Add Member
 			</Typography>
 			<TextField
 				label="Name"
 				value={name}
 				onChange={(e) => setName(e.target.value)}
 				fullWidth
-				required // Set the name field as required
 			/>
 			<TextField
-				label="Genres"
-				value={genres}
-				onChange={(e) => setGenres(e.target.value)}
-				fullWidth
-				multiline
-			/>
-			<TextField
-				label="Image URL"
-				value={image}
-				onChange={(e) => setImage(e.target.value)}
+				label="Email"
+				value={email}
+				onChange={(e) => setEmail(e.target.value)}
 				fullWidth
 			/>
 			<TextField
-				label="Premiered"
-				value={premiered}
-				onChange={(e) => setPremiered(e.target.value)}
+				label="City"
+				value={city}
+				onChange={(e) => setCity(e.target.value)}
 				fullWidth
 			/>
-			<div className="button-group">
+
+			<div
+				className="button-group"
+				sx={{ display: "flex", justifyContent: "flex-end", mt: 3 }}
+			>
 				<Button
 					variant="outlined"
 					className="cancel-button"
 					onClick={handleCancelClick}
-					component={Link}
-					to={`/movies`}
 					sx={{
 						color: "#008080",
 						borderColor: "#008080",
@@ -118,21 +127,19 @@ export const AddMovie = ({ onCancel }) => {
 				>
 					Cancel
 				</Button>
-				<Box ml={2}>
-					<Button
-						type="submit"
-						variant="contained"
-						color="primary"
-						sx={{
-							backgroundColor: "#008080",
-							"&:hover": {
-								backgroundColor: "#006666",
-							},
-						}}
-					>
-						Save
-					</Button>
-				</Box>
+				<Button
+					type="submit"
+					variant="contained"
+					color="primary"
+					sx={{
+						backgroundColor: "#008080",
+						"&:hover": {
+							backgroundColor: "#006666",
+						},
+					}}
+				>
+					Save
+				</Button>
 			</div>
 		</Container>
 	)

@@ -18,7 +18,6 @@ import { useSelector } from "react-redux"
 import axios from "axios"
 
 export const Movie = ({ movie }) => {
-	const [membersWatched, setMembersWatched] = useState([])
 	const members = useSelector((state) => state.members)
 	const [membersNames, setMembersNames] = useState([])
 	const port = 8040
@@ -32,19 +31,19 @@ export const Movie = ({ movie }) => {
 				}
 			)
 			.then((response) => {
-				setMembersWatched(response.data)
-
 				members.then((resolvedMembers) => {
-					response.data.forEach((memberWatchedObj) => {
+					const updatedMembersNames = response.data.map((memberWatchedObj) => {
 						const chosenMember = resolvedMembers.find(
 							(member) => member._id === memberWatchedObj[0]
 						)
-						console.log(chosenMember)
-						setMembersNames((prevMembersNames) => [
-							...prevMembersNames,
-							`${chosenMember.name} | ${memberWatchedObj[1].split("T")[0]}`,
-						])
+						return {
+							memberWatchedAt: `${chosenMember.name} | ${
+								memberWatchedObj[1].split("T")[0]
+							}`,
+							memberId: memberWatchedObj[0],
+						}
 					})
+					setMembersNames(updatedMembersNames)
 				})
 			})
 			.catch((error) => {
@@ -76,9 +75,15 @@ export const Movie = ({ movie }) => {
 					Subs Watched:
 				</Typography>
 				{membersNames.map((member) => (
-					<Typography variant="body2" key={`${member} und ${movie._id}`}>
-						{member}
-					</Typography>
+					<Link
+						to={`/editMember/${member.memberId}`}
+						key={`${member.memberWatchedAt}`}
+					>
+						<Typography variant="body2">
+							{/* key={`${member} und ${movie._id}`} */}
+							{member.memberWatchedAt}
+						</Typography>
+					</Link>
 				))}
 			</CardContent>
 			<CardContent sx={{ display: "flex", justifyContent: "space-around" }}>

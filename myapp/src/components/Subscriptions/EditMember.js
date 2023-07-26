@@ -13,46 +13,46 @@ import {
 	Card,
 	Checkbox,
 	Container,
-	Copyright,
+	CardHeader,
 } from "@mui/material"
 import { useSelector } from "react-redux"
 
-export const EditMovie = () => {
-	const movies = useSelector((state) => state.movies) || []
-	const [currMovie, setCurrMovie] = useState({})
-	const { id: movieId } = useParams()
+export const EditMember = () => {
+	const members = useSelector((state) => state.members) || []
+	const [currMember, setCurrMember] = useState({})
+	const { id } = useParams()
 
-	const [name, setName] = useState(currMovie.name || "")
-	const [genres, setGenres] = useState(currMovie.genres || [])
-	const [image, setImage] = useState(currMovie.image || "")
-	const [premiered, setPremiered] = useState(currMovie.premiered || "")
+	const [name, setName] = useState(currMember.name || "")
+	const [email, setEmail] = useState(currMember.email || "")
+	const [city, setCity] = useState(currMember.city || "")
 
 	const handleSave = () => {
-		// Create the updated movie object and call the onSave function
-		const updatedMovie = {
-			...currMovie,
+		// Create the updated member object and call the onSave function
+		const updatedMember = {
+			...currMember,
 			name,
-			genres,
-			image,
-			premiered,
+			email,
+			city,
 		}
-		// onSave(updatedMovie);
+		// onSave(updatedMember);
 	}
 
 	useEffect(() => {
-		movies.then((movies) => {
-			if (Array.isArray(movies) && movies.length !== 0) {
-				const foundMovie = movies.find((movie) => movie._id === movieId)
-				if (foundMovie) {
-					setCurrMovie(foundMovie)
+		members.then((resolvedMembers) => {
+			console.log("members:", resolvedMembers)
+			if (Array.isArray(resolvedMembers) && resolvedMembers.length !== 0) {
+				const foundMember = resolvedMembers.find((member) => member._id === id)
+				console.log("found member:", foundMember)
+				if (foundMember) {
+					setCurrMember(foundMember)
+					console.log("member set")
 				} else {
-					// Handle case when movie is not found
-					console.log("Movie not found")
+					// Handle case when member is not found
+					console.log("Member not found")
 				}
 			}
-			console.log("CURRENT MOVIE:", currMovie)
 		})
-	}, [movies, movieId, currMovie])
+	}, [members, id, currMember])
 
 	return (
 		<div>
@@ -61,12 +61,12 @@ export const EditMovie = () => {
 				color="initial"
 				sx={{ textAlign: "center", mb: "2em", mt: "3.5em" }}
 			>
-				Edit Movie: {currMovie.name}
+				Edit Member: {currMember.name}
 			</Typography>
 			<Container
 				maxWidth="sm"
 				sx={{
-					border: "1px solid #008080",
+					border: "1px solid #008080 ",
 					":hover": {
 						border: "2px solid #008080",
 					},
@@ -93,39 +93,32 @@ export const EditMovie = () => {
 					gutterBottom
 					sx={{ textAlign: "center", color: "#008080" }}
 				>
-					Edit Movie
+					Edit Member
 				</Typography>
 				<TextField
 					label="Name"
+					value={name}
 					onChange={(e) => setName(e.target.value)}
 					InputProps={{
-						placeholder: `Enter Name, current: ${currMovie.name}`,
+						placeholder: `Enter Name, current: ${currMember.name}`,
 					}}
 					fullWidth
 				/>
 				<TextField
-					label="Genres"
-					onChange={(e) => setGenres(e.target.value.split(","))}
+					label="Email"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
 					InputProps={{
-						placeholder: `Enter Genres (comma-separated), current: ${currMovie.genres?.join(
-							","
-						)}`,
+						placeholder: `Enter Email, current: ${currMember.email}`,
 					}}
 					fullWidth
 				/>
 				<TextField
-					label="Image URL"
-					onChange={(e) => setImage(e.target.value)}
+					label="City"
+					value={city}
+					onChange={(e) => setCity(e.target.value)}
 					InputProps={{
-						placeholder: `Enter Image URL, current: ${currMovie.image}`,
-					}}
-					fullWidth
-				/>
-				<TextField
-					label="Premiered"
-					onChange={(e) => setPremiered(e.target.value)}
-					InputProps={{
-						placeholder: `Enter Premiered, current: ${currMovie.premiered}`,
+						placeholder: `Enter City, current: ${currMember.city}`,
 					}}
 					fullWidth
 				/>
@@ -133,7 +126,7 @@ export const EditMovie = () => {
 					<Button
 						variant="outlined"
 						component={Link}
-						to={`/movies`}
+						to={`/subscriptions`}
 						className="cancel-button"
 						sx={{
 							color: "#008080",
