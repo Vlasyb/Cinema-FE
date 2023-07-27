@@ -1,20 +1,5 @@
 import { useState, useEffect } from "react"
-import {
-	FormControlLabel,
-	Toolbar,
-	TextField,
-	Typography,
-	Link,
-	Button,
-	Grid,
-	Box,
-	CssBaseline,
-	InputLabel,
-	Input,
-	Container,
-	Checkbox,
-	Copyright,
-} from "@mui/material"
+import { Button, Container } from "@mui/material"
 import { AllMovies } from "./AllMovies"
 import { AddMovie } from "./AddMovie"
 import { useSelector, useDispatch } from "react-redux"

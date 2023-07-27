@@ -1,13 +1,5 @@
 import React, { useState } from "react"
-import { Link } from "react-router-dom"
-import {
-	Button,
-	Checkbox,
-	Container,
-	FormControlLabel,
-	TextField,
-	Typography,
-} from "@mui/material"
+import { Button, Container, TextField, Typography } from "@mui/material"
 
 export const AddMember = ({ onCancel }) => {
 	const [name, setName] = useState("")

@@ -1,21 +1,5 @@
 import { useState, useEffect } from "react"
-import {
-	FormControlLabel,
-	Toolbar,
-	TextField,
-	Typography,
-	Link,
-	Button,
-	Grid,
-	Box,
-	CssBaseline,
-	InputLabel,
-	Input,
-	Container,
-	Checkbox,
-	Copyright,
-} from "@mui/material"
-import { useSelector, useDispatch } from "react-redux"
+import { TextField, Typography, Button, Box, Container } from "@mui/material"
 import { Movie } from "./Movie"
 import axios from "axios"
 

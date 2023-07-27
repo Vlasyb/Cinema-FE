@@ -1,22 +1,8 @@
 import { useState, useEffect } from "react"
-import {
-	FormControlLabel,
-	Toolbar,
-	TextField,
-	Typography,
-	Link,
-	Button,
-	Grid,
-	Box,
-	CssBaseline,
-	InputLabel,
-	Input,
-	Container,
-	Checkbox,
-	Copyright,
-} from "@mui/material"
+import { Button, Container } from "@mui/material"
 import { AllMembers } from "./AllMembers"
 import { AddMember } from "./AddMember"
+import { Subscribe } from "./Subscribe"
 import { useSelector, useDispatch } from "react-redux"
 
 export const Subscriptions = () => {
@@ -70,7 +56,7 @@ export const Subscriptions = () => {
 					Add Member
 				</Button>
 			</Container>
-			{allMemberBtn && <AllMembers moviesPromise={members} />}
+			{allMemberBtn && <AllMembers membersPromise={members} />}
 			{addMemberBtn && <AddMember onCancel={changeShow} />}
 		</div>
 	)

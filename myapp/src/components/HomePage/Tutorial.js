@@ -1,18 +1,5 @@
 import React from "react"
-import { Link } from "react-router-dom"
-import {
-	AppBar,
-	Toolbar,
-	IconButton,
-	Typography,
-	Stack,
-	Button,
-	Item,
-	Card,
-	List,
-	ListItem,
-	CardMedia,
-} from "@mui/material"
+import { Stack, ListItem } from "@mui/material"
 
 export const Tutorial = () => {
 	return (
