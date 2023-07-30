@@ -2,8 +2,13 @@ import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import { TextField, Typography, Button, Container } from "@mui/material"
 import { useSelector } from "react-redux"
+import { Success } from "../Success"
+import { Error } from "../Error"
+import axios from "axios"
 
 export const EditMovie = () => {
+	const port = 8040
+
 	const movies = useSelector((state) => state.movies) || []
 	const [currMovie, setCurrMovie] = useState({})
 	const { id: movieId } = useParams()
@@ -13,16 +18,48 @@ export const EditMovie = () => {
 	const [image, setImage] = useState(currMovie.image || "")
 	const [premiered, setPremiered] = useState(currMovie.premiered || "")
 
-	const handleSave = () => {
-		// Create the updated movie object and call the onSave function
+	const [message, setMessage] = useState("")
+	const [errorMessage, setErrorMessage] = useState("")
+
+	// const updatedMovie = {
+	// 	...currMovie,
+	// 	name,
+	// 	genres,
+	// 	image,
+	// 	premiered,
+	// }
+	const handleUpdate = async (e) => {
+		e.preventDefault()
+		// Create the updated user object and call the onSave function
 		const updatedMovie = {
-			...currMovie,
-			name,
+			name: name == "" ? currMovie.name : name,
+			premiered: premiered == "" ? currMovie.premiered : premiered,
+			image: image == "" ? currMovie.image : image,
 			genres,
-			image,
-			premiered,
 		}
-		// onSave(updatedMovie);
+		try {
+			const { data: res } = await axios.put(
+				`http://localhost:${port}/movies/${currMovie._id}`,
+				updatedMovie,
+				{ withCredentials: true }
+			)
+			console.log("SAVING ", res)
+			setName("")
+			setPremiered("")
+			setImage("")
+			setGenres("")
+			// dispatch("LOAD_USERS")
+			setMessage(res)
+			setTimeout(() => {
+				setMessage("")
+			}, 2500)
+		} catch (err) {
+			setErrorMessage(err)
+			setTimeout(() => {
+				setErrorMessage("")
+			}, 2500)
+			console.error("err ", err)
+		}
 	}
 
 	useEffect(() => {
@@ -82,6 +119,7 @@ export const EditMovie = () => {
 					Edit Movie
 				</Typography>
 				<TextField
+					value={name}
 					label="Name"
 					onChange={(e) => setName(e.target.value)}
 					InputProps={{
@@ -90,6 +128,7 @@ export const EditMovie = () => {
 					fullWidth
 				/>
 				<TextField
+					value={genres}
 					label="Genres"
 					onChange={(e) => setGenres(e.target.value.split(","))}
 					InputProps={{
@@ -100,6 +139,7 @@ export const EditMovie = () => {
 					fullWidth
 				/>
 				<TextField
+					value={image}
 					label="Image URL"
 					onChange={(e) => setImage(e.target.value)}
 					InputProps={{
@@ -108,6 +148,7 @@ export const EditMovie = () => {
 					fullWidth
 				/>
 				<TextField
+					value={premiered}
 					label="Premiered"
 					onChange={(e) => setPremiered(e.target.value)}
 					InputProps={{
@@ -135,7 +176,7 @@ export const EditMovie = () => {
 					<Button
 						variant="contained"
 						color="primary"
-						onClick={handleSave}
+						onClick={handleUpdate}
 						sx={{
 							backgroundColor: "#008080",
 							"&:hover": {
@@ -147,6 +188,8 @@ export const EditMovie = () => {
 					</Button>
 				</div>
 			</Container>
+			{message && <Success message={message} />}
+			{errorMessage && <Error message={errorMessage} />}
 		</div>
 	)
 }

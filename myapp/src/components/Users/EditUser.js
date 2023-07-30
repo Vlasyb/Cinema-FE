@@ -1,5 +1,8 @@
 import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
+import { Success } from "../Success"
+import { Error } from "../Error"
+import axios from "axios"
 import {
 	FormControlLabel,
 	TextField,
@@ -9,44 +12,76 @@ import {
 	Container,
 } from "@mui/material"
 import { useSelector } from "react-redux"
+import { useDispatch } from "react-redux"
 
 export const EditUser = () => {
+	const port = 8040
+
+	const dispatch = useDispatch()
 	const users = useSelector(((state) => state.users) || [])
 	const [currUser, setCurrUser] = useState({})
 	const { username } = useParams()
+
+	const [message, setMessage] = useState("")
+	const [errorMessage, setErrorMessage] = useState("")
 
 	const [firstName, setFirstName] = useState(currUser.firstName || "")
 	const [lastName, setLastName] = useState(currUser.lastName || "")
 	const [usernameContainer, setUsernameContainer] = useState(
 		currUser.usernameContainer || ""
 	)
-	const [sessionTimeout, setSessionTimeout] = useState(
-		currUser.sessionTimeout || ""
+	const [sessionTimeOut, setSessionTimeOut] = useState(
+		currUser.sessionTimeOut || ""
 	)
 	const [permissions, setPermissions] = useState(currUser.permissions || [])
 
-	const handleSave = () => {
+	const handleUpdate = async (e) => {
+		e.preventDefault()
 		// Create the updated user object and call the onSave function
 		const updatedUser = {
-			...currUser,
-			firstName,
-			lastName,
-			username,
-			sessionTimeout,
+			// ...currUser,
+			firstName: firstName == "" ? currUser.firstName : firstName,
+			lastName: lastName == "" ? currUser.lastName : lastName,
+			username: usernameContainer == "" ? currUser.username : usernameContainer,
+			sessionTimeOut:
+				sessionTimeOut == "" ? currUser.sessionTimeOut : sessionTimeOut,
 			permissions,
 		}
-		// onSave(updatedUser);
+		try {
+			const { data: res } = await axios.put(
+				`http://localhost:${port}/users/${currUser.id}`,
+				updatedUser,
+				{ withCredentials: true }
+			)
+			console.log("SAVING ", res)
+			setFirstName("")
+			setLastName("")
+			setUsernameContainer("")
+			setSessionTimeOut("")
+			setPermissions([])
+			// dispatch("LOAD_USERS")
+			setMessage(res)
+			setTimeout(() => {
+				setMessage("")
+			}, 2500)
+		} catch (err) {
+			setErrorMessage(err)
+			setTimeout(() => {
+				setErrorMessage("")
+			}, 2500)
+			console.error("err ", err)
+		}
 	}
 
 	const permissionCheckboxes = [
-		{ key: "viewSubs", label: "View Subscriptions" },
-		{ key: "createSubs", label: "Create Subscriptions" },
-		{ key: "deleteSubs", label: "Delete Subscriptions" },
-		{ key: "updateSubs", label: "Update Subscriptions" },
-		{ key: "viewMovies", label: "View Movies" },
-		{ key: "createMovies", label: "Create Movies" },
-		{ key: "deleteMovies", label: "Delete Movies" },
-		{ key: "updateMovies", label: "Update Movies" },
+		{ key: "View Subscriptions", label: "View Subscriptions" },
+		{ key: "Create Subscriptions", label: "Create Subscriptions" },
+		{ key: "Delete Subscriptions", label: "Delete Subscriptions" },
+		{ key: "Update Subscriptions", label: "Update Subscriptions" },
+		{ key: "View Movies", label: "View Movies" },
+		{ key: "Create Movies", label: "Create Movies" },
+		{ key: "Delete Movies", label: "Delete Movies" },
+		{ key: "Update Movies", label: "Update Movies" },
 	]
 
 	useEffect(() => {
@@ -111,6 +146,7 @@ export const EditUser = () => {
 				</Typography>
 				<TextField
 					label="First Name"
+					value={firstName}
 					onChange={(e) => setFirstName(e.target.value)}
 					InputProps={{
 						placeholder: `Enter First Name, current: ${currUser.firstName}`,
@@ -119,6 +155,7 @@ export const EditUser = () => {
 				/>
 				<TextField
 					label="Last Name"
+					value={lastName}
 					onChange={(e) => setLastName(e.target.value)}
 					InputProps={{
 						placeholder: `Enter Last Name, current: ${currUser.lastName}`,
@@ -126,6 +163,7 @@ export const EditUser = () => {
 					fullWidth
 				/>
 				<TextField
+					value={usernameContainer}
 					label="Username"
 					InputProps={{
 						placeholder: `Enter Username, current: ${currUser.username}`,
@@ -134,8 +172,9 @@ export const EditUser = () => {
 					fullWidth
 				/>
 				<TextField
+					value={sessionTimeOut}
 					label="Session Timeout"
-					onChange={(e) => setSessionTimeout(e.target.value)}
+					onChange={(e) => setSessionTimeOut(+e.target.value)}
 					InputProps={{
 						placeholder: `Enter Session Timeout, current: ${currUser.sessionTimeOut}`,
 					}}
@@ -169,12 +208,15 @@ export const EditUser = () => {
 											color: "#008080",
 										},
 									}}
-									checked={permissions[checkbox.key] || false}
+									checked={permissions.includes(checkbox.key)}
 									onChange={(e) =>
-										setPermissions((prev) => ({
-											...prev,
-											[checkbox.key]: e.target.checked,
-										}))
+										setPermissions((prev) => {
+											if (e.target.checked) {
+												return [...prev, checkbox.key]
+											} else {
+												return prev.filter((item) => item !== checkbox.key)
+											}
+										})
 									}
 								/>
 							}
@@ -202,7 +244,7 @@ export const EditUser = () => {
 					<Button
 						variant="contained"
 						color="primary"
-						onClick={handleSave}
+						onClick={handleUpdate}
 						sx={{
 							backgroundColor: "#008080",
 							"&:hover": {
@@ -214,6 +256,8 @@ export const EditUser = () => {
 					</Button>
 				</div>
 			</Container>
+			{message && <Success message={message} />}
+			{errorMessage && <Error message={errorMessage} />}
 		</div>
 	)
 }

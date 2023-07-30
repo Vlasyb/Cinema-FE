@@ -1,9 +1,21 @@
 import { Link } from "react-router-dom"
 import { Typography, Button, CardContent, Card } from "@mui/material"
+import axios from "axios"
 
 export const User = ({ user }) => {
-	const handleDelete = () => {
+	const port = 8040
+
+	const handleDelete = async () => {
 		console.log("Delete User")
+		try {
+			const { data: res } = await axios.delete(
+				`http://localhost:${port}/users/${user.id}`,
+				{ withCredentials: true }
+			)
+			console.log("log -  ", res)
+		} catch (err) {
+			console.error("err ", err)
+		}
 	}
 
 	return (

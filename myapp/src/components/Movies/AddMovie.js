@@ -1,42 +1,63 @@
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Button, Container, TextField, Typography, Box } from "@mui/material"
+import { Success } from "../Success"
+import { Error } from "../Error"
+import axios from "axios"
 
 export const AddMovie = ({ onCancel }) => {
+	const port = 8040
+
 	const [name, setName] = useState("")
 	const [genres, setGenres] = useState([])
 	const [image, setImage] = useState("")
 	const [premiered, setPremiered] = useState("")
 
+	const [message, setMessage] = useState("")
+	const [errorMessage, setErrorMessage] = useState("")
+
 	const handleCancelClick = () => {
 		onCancel("all") // Call the onCancel function passed from the parent component
 	}
 
-	const handleSave = () => {
-		// Create the movie object and call the onSave function
+	// const newMovie = {
+	// 	name,
+	// 	genres,
+	// 	image,
+	// 	premiered,
+	// }
+	const handleSave = async () => {
+		console.log("Saving")
+		// Create the user object and call the onSave function
 		const newMovie = {
-			name,
-			genres,
-			image,
-			premiered,
+			name: name,
+			premiered: premiered,
+			image: image,
+			genres: genres,
 		}
+		try {
+			const { data: res } = await axios.post(
+				`http://localhost:${port}/movies/`,
+				newMovie,
+				{ withCredentials: true }
+			)
+			console.log(res)
+			setName("")
+			setImage("")
+			setPremiered("")
+			setGenres([])
+			setMessage(res)
 
-		// TODO: Send a POST request to create a new movie in the database
-		// For example using fetch or axios library:
-		// fetch('/api/movies', {
-		//   method: 'POST',
-		//   headers: {
-		//     'Content-Type': 'application/json',
-		//   },
-		//   body: JSON.stringify(newMovie),
-		// })
-		//   .then(response => response.json())
-		//   .then(data => {
-		//     // Handle the response if needed
-		//   })
-		//   .catch(error => {
-		//     // Handle errors if any
-		//   });
+			setTimeout(() => {
+				setMessage("")
+			}, 2500)
+		} catch (err) {
+			setErrorMessage(err)
+			setTimeout(() => {
+				setErrorMessage("")
+			}, 2500)
+			console.error("err ", err)
+		}
 	}
 
 	const handleSubmit = (e) => {
@@ -45,95 +66,99 @@ export const AddMovie = ({ onCancel }) => {
 	}
 
 	return (
-		<Container
-			component="form" // Use form element for submitting data
-			onSubmit={handleSubmit}
-			maxWidth="sm"
-			sx={{
-				mt: "2em",
-				border: "1px solid #008080 ",
-				":hover": {
-					border: "2px solid #008080",
-				},
-				borderRadius: 4,
-				boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
-				padding: 2,
-				backgroundColor: "#f0f0f0",
-				"& .MuiTextField-root": { marginBottom: 2 },
-				"& .button-group": {
-					display: "flex",
-					justifyContent: "flex-end",
-					mt: 3,
-				},
-			}}
-		>
-			<Typography
-				variant="h5"
-				gutterBottom
-				sx={{ color: "#008080", textAlign: "center" }}
+		<div>
+			<Container
+				component="form" // Use form element for submitting data
+				onSubmit={handleSubmit}
+				maxWidth="sm"
+				sx={{
+					mt: "2em",
+					border: "1px solid #008080 ",
+					":hover": {
+						border: "2px solid #008080",
+					},
+					borderRadius: 4,
+					boxShadow: "0px 4px 6px rgba(0, 0, 0, 0.1)",
+					padding: 2,
+					backgroundColor: "#f0f0f0",
+					"& .MuiTextField-root": { marginBottom: 2 },
+					"& .button-group": {
+						display: "flex",
+						justifyContent: "flex-end",
+						mt: 3,
+					},
+				}}
 			>
-				Add Movie
-			</Typography>
-			<TextField
-				label="Name"
-				value={name}
-				onChange={(e) => setName(e.target.value)}
-				fullWidth
-				required // Set the name field as required
-			/>
-			<TextField
-				label="Genres"
-				value={genres}
-				onChange={(e) => setGenres(e.target.value)}
-				fullWidth
-				multiline
-			/>
-			<TextField
-				label="Image URL"
-				value={image}
-				onChange={(e) => setImage(e.target.value)}
-				fullWidth
-			/>
-			<TextField
-				label="Premiered"
-				value={premiered}
-				onChange={(e) => setPremiered(e.target.value)}
-				fullWidth
-			/>
-			<div className="button-group">
-				<Button
-					variant="outlined"
-					className="cancel-button"
-					onClick={handleCancelClick}
-					component={Link}
-					to={`/movies`}
-					sx={{
-						color: "#008080",
-						borderColor: "#008080",
-						"&:hover": {
-							borderColor: "#006666",
-							backgroundColor: "transparent",
-						},
-					}}
+				<Typography
+					variant="h5"
+					gutterBottom
+					sx={{ color: "#008080", textAlign: "center" }}
 				>
-					Cancel
-				</Button>
-				<Box ml={2}>
+					Add Movie
+				</Typography>
+				<TextField
+					label="Name"
+					value={name}
+					onChange={(e) => setName(e.target.value)}
+					fullWidth
+					required // Set the name field as required
+				/>
+				<TextField
+					label="Genres"
+					value={genres}
+					onChange={(e) => setGenres(e.target.value)}
+					fullWidth
+					multiline
+				/>
+				<TextField
+					label="Image URL"
+					value={image}
+					onChange={(e) => setImage(e.target.value)}
+					fullWidth
+				/>
+				<TextField
+					label="Premiered"
+					value={premiered}
+					onChange={(e) => setPremiered(e.target.value)}
+					fullWidth
+				/>
+				<div className="button-group">
 					<Button
-						type="submit"
-						variant="contained"
-						color="primary"
+						variant="outlined"
+						className="cancel-button"
+						onClick={handleCancelClick}
+						component={Link}
+						to={`/movies`}
 						sx={{
-							backgroundColor: "#008080",
+							color: "#008080",
+							borderColor: "#008080",
 							"&:hover": {
-								backgroundColor: "#006666",
+								borderColor: "#006666",
+								backgroundColor: "transparent",
 							},
 						}}
 					>
-						Save
+						Cancel
 					</Button>
-				</Box>
-			</div>
-		</Container>
+					<Box ml={2}>
+						<Button
+							type="submit"
+							variant="contained"
+							color="primary"
+							sx={{
+								backgroundColor: "#008080",
+								"&:hover": {
+									backgroundColor: "#006666",
+								},
+							}}
+						>
+							Save
+						</Button>
+					</Box>
+				</div>
+			</Container>
+			{message && <Success message={message} />}
+			{errorMessage && <Error message={errorMessage} />}
+		</div>
 	)
 }

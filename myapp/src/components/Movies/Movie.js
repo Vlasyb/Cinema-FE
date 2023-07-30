@@ -9,6 +9,19 @@ export const Movie = ({ movie }) => {
 	const [membersNames, setMembersNames] = useState([])
 	const port = 8040
 
+	const handleDelete = async () => {
+		console.log("Delete Movie")
+		try {
+			const { data: res } = await axios.delete(
+				`http://localhost:${port}/movies/${movie._id}`,
+				{ withCredentials: true }
+			)
+			console.log("log -  ", res)
+		} catch (err) {
+			console.error("err ", err)
+		}
+	}
+
 	useEffect(() => {
 		axios
 			.get(
@@ -96,6 +109,7 @@ export const Movie = ({ movie }) => {
 				<Button
 					variant="contained"
 					color="error"
+					onClick={handleDelete}
 					// Add the delete functionality here
 					sx={{
 						width: "25%",

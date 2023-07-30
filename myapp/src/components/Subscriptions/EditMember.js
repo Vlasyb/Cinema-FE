@@ -2,8 +2,13 @@ import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 import { TextField, Typography, Button, Container } from "@mui/material"
 import { useSelector } from "react-redux"
+import { Success } from "../Success"
+import { Error } from "../Error"
+import axios from "axios"
 
 export const EditMember = () => {
+	const port = 8040
+
 	const members = useSelector((state) => state.members) || []
 	const [currMember, setCurrMember] = useState({})
 	const { id } = useParams()
@@ -12,15 +17,37 @@ export const EditMember = () => {
 	const [email, setEmail] = useState(currMember.email || "")
 	const [city, setCity] = useState(currMember.city || "")
 
-	const handleSave = () => {
-		// Create the updated member object and call the onSave function
+	const [message, setMessage] = useState("")
+	const [errorMessage, setErrorMessage] = useState("")
+
+	const handleUpdate = async (e) => {
+		e.preventDefault()
 		const updatedMember = {
-			...currMember,
-			name,
-			email,
-			city,
+			name: name == "" ? currMember.name : name,
+			city: city == "" ? currMember.city : city,
+			email: email == "" ? currMember.email : email,
 		}
-		// onSave(updatedMember);
+		try {
+			const { data: res } = await axios.put(
+				`http://localhost:${port}/members/${currMember._id}`,
+				updatedMember,
+				{ withCredentials: true }
+			)
+			console.log("SAVING ", res)
+			setName("")
+			setEmail("")
+			setCity("")
+			setMessage(res)
+			setTimeout(() => {
+				setMessage("")
+			}, 2500)
+		} catch (err) {
+			setErrorMessage(err)
+			setTimeout(() => {
+				setErrorMessage("")
+			}, 2500)
+			console.error("err ", err)
+		}
 	}
 
 	useEffect(() => {
@@ -128,7 +155,7 @@ export const EditMember = () => {
 					<Button
 						variant="contained"
 						color="primary"
-						onClick={handleSave}
+						onClick={handleUpdate}
 						sx={{
 							backgroundColor: "#008080",
 							"&:hover": {
@@ -140,6 +167,8 @@ export const EditMember = () => {
 					</Button>
 				</div>
 			</Container>
+			{message && <Success message={message} />}
+			{errorMessage && <Error message={errorMessage} />}
 		</div>
 	)
 }

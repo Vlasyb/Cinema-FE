@@ -15,19 +15,17 @@ export const AllMembers = ({ membersPromise }) => {
 		})
 	}, [membersPromise])
 
-	const handleDeleteMember = (id) => {
-		// TODO: Implement the logic to delete the member with the given id
-		// For example using fetch or axios library:
-		// axios
-		//   .delete(`http://localhost:${port}/members/${id}`, {
-		//     withCredentials: true,
-		//   })
-		//   .then((response) => {
-		//     // Handle the response if needed
-		//   })
-		//   .catch((error) => {
-		//     // Handle errors if any
-		//   });
+	const handleDeleteMember = async (id) => {
+		console.log("Delete Member")
+		try {
+			const { data: res } = await axios.delete(
+				`http://localhost:${port}/members/${id}`,
+				{ withCredentials: true }
+			)
+			console.log("log -  ", res)
+		} catch (err) {
+			console.error("err ", err)
+		}
 	}
 
 	return (
