@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react"
-import { useCookies } from "react-cookie"
 
 import { Link } from "react-router-dom"
 import {
@@ -14,9 +13,12 @@ import HomeIcon from "@mui/icons-material/Home"
 import ExitToAppIcon from "@mui/icons-material/ExitToApp"
 import axios from "axios"
 import { useDispatch, useSelector } from "react-redux"
+import { useLocation } from "react-router-dom"
 
 export const NavBar = () => {
 	const port = "8040"
+
+	const location = useLocation()
 	const dispatch = useDispatch()
 	const loggedUserStore = useSelector((state) => state.loggedUser)
 
@@ -34,6 +36,9 @@ export const NavBar = () => {
 			console.error("err ", err)
 		}
 	}
+	const isPathActive = (path) => {
+		return location.pathname === path
+	}
 
 	useEffect(() => {
 		// Check if loggedUserStore is a Promise
@@ -46,6 +51,35 @@ export const NavBar = () => {
 			setLoggedUser(loggedUserStore)
 		}
 	}, [loggedUserStore])
+
+	const handleMoviesVisibility = () => {
+		if (loggedUser.isAdmin) {
+			return true
+		}
+		console.log(loggedUser)
+		if (!loggedUser.username) {
+			return false
+		}
+		console.log(loggedUser.permissions)
+		if (loggedUser.permissions.includes("view movies")) {
+			return true
+		}
+		return false
+	}
+	const handleSubscriptionsVisibility = () => {
+		if (loggedUser.isAdmin) {
+			return true
+		}
+		console.log(loggedUser)
+		if (!loggedUser.username) {
+			return false
+		}
+		console.log(loggedUser.permissions)
+		if (loggedUser.permissions.includes("view subscriptions")) {
+			return true
+		}
+		return false
+	}
 
 	return (
 		<div>
@@ -67,6 +101,7 @@ export const NavBar = () => {
 						edge="start"
 						sx={{
 							marginRight: "1%",
+							backgroundColor: isPathActive("/") ? "#4CAF50" : "none",
 						}}
 					>
 						<HomeIcon />
@@ -76,8 +111,8 @@ export const NavBar = () => {
 						variant="h6"
 						color="white"
 					>
-						Hello {loggedUser.username || "Unknown"}
-						{/* Hello Unknown */}
+						Greetings{" "}
+						{loggedUser.username || "Guest. Log in To Access Sites Features"}
 					</Typography>
 					<Stack direction="row" spacing={7}>
 						<Button
@@ -86,6 +121,10 @@ export const NavBar = () => {
 								fontFamily: "Poppins",
 								width: "100%",
 								color: "white",
+								backgroundColor: "#008080",
+								visibility: handleMoviesVisibility() ? "visible" : "hidden",
+
+								backgroundColor: isPathActive("/movies") ? "#4CAF50" : "none",
 							}}
 							component={Link}
 							to="/movies"
@@ -101,6 +140,12 @@ export const NavBar = () => {
 								fontFamily: "Poppins",
 								width: "100%",
 								color: "white",
+								visibility: handleSubscriptionsVisibility()
+									? "visible"
+									: "hidden",
+								backgroundColor: isPathActive("/subscriptions")
+									? "#4CAF50"
+									: "none",
 							}}
 							component={Link}
 							to="/subscriptions"
@@ -117,6 +162,8 @@ export const NavBar = () => {
 								textAlign: "center",
 								width: "100%",
 								color: "white",
+								visibility: loggedUser.isAdmin ? "visible" : "hidden",
+								backgroundColor: isPathActive("/users") ? "#4CAF50" : "none",
 							}}
 							component={Link}
 							to="/users"
@@ -133,6 +180,7 @@ export const NavBar = () => {
 							fontSize: "100%",
 							fontFamily: "Poppins",
 							color: "white",
+							visibility: loggedUser.username ? "visible" : "hidden",
 						}}
 						component={Link}
 						to="/login"

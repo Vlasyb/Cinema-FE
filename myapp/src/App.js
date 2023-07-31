@@ -79,17 +79,22 @@ function App() {
 			></Typography>
 
 			<Routes>
-				<Route path="/" />
-				<Route path="/movies" element={<Movies />} />
-				<Route path="/subscriptions" element={<Subscriptions />} />
-				<Route path="/users" element={<Users />} />
-				<Route path="/about" element={<About />} />
-				<Route path="/login" element={<Login />} />
-				<Route path="/register" element={<Register />} />
-				<Route path="/editmovie/:id" element={<EditMovie />} />
-				<Route path="/edituser/:username" element={<EditUser />} />
-				<Route path="/editmember/:id" element={<EditMember />} />
-				<Route path="*" element={<Error message="Page Not Found" />} />
+				<>
+					<Route path="/" />
+					<Route path="/movies" element={<Movies />} />
+					<Route path="/subscriptions" element={<Subscriptions />} />
+					<Route path="/users" element={<Users />} />
+					<Route path="/about" element={<About />} />
+					<Route path="/editmovie/:id" element={<EditMovie />} />
+					<Route path="/edituser/:username" element={<EditUser />} />
+					<Route path="/editmember/:id" element={<EditMember />} />
+					<Route path="*" element={<Error message="Page Not Found" />} />
+				</>
+				<>
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Register />} />
+					{/* <Route path="*" element={<Error message="Page Not Found" />} /> */}
+				</>
 			</Routes>
 
 			{location.pathname == "/" && (

@@ -36,6 +36,7 @@ export const Subscriptions = () => {
 						backgroundColor: "#008080",
 						fontFamily: "poppins",
 						fontSize: "16px",
+						backgroundColor: allMemberBtn ? "#4CAF50" : "#008080",
 						":hover": { border: "3px solid black", backgroundColor: "#008080" },
 					}}
 				>
@@ -50,6 +51,7 @@ export const Subscriptions = () => {
 						backgroundColor: "#008080",
 						fontFamily: "poppins",
 						fontSize: "16px",
+						backgroundColor: addMemberBtn ? "#4CAF50" : "#008080",
 						":hover": { border: "3px solid black", backgroundColor: "#008080" },
 					}}
 				>

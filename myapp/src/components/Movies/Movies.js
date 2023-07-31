@@ -47,6 +47,7 @@ export const Movies = () => {
 						backgroundColor: "#008080",
 						fontFamily: "poppins",
 						fontSize: "16px",
+						backgroundColor: allMovieBtn ? "#4CAF50" : "#008080",
 						":hover": { border: "3px solid black", backgroundColor: "#008080" },
 					}}
 				>
@@ -61,6 +62,7 @@ export const Movies = () => {
 						backgroundColor: "#008080",
 						fontFamily: "poppins",
 						fontSize: "16px",
+						backgroundColor: addMovieBtn ? "#4CAF50" : "#008080",
 						":hover": { border: "3px solid black", backgroundColor: "#008080" },
 					}}
 				>

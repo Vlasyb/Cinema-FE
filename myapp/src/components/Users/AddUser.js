@@ -78,38 +78,38 @@ export const AddUser = ({ onCancel }) => {
 		setPermissions((prev) => {
 			if (e.target.checked) {
 				if (
-					checkbox.key == "Create Subscriptions" ||
-					checkbox.key == "Delete Subscriptions" ||
-					checkbox.key == "Update Subscriptions"
+					checkbox.key == "create subscriptions" ||
+					checkbox.key == "delete subscriptions" ||
+					checkbox.key == "update subscriptions"
 				) {
-					return [...prev, checkbox.key, "View Subscriptions"]
+					return [...prev, checkbox.key, "view subscriptions"]
 				} else if (
-					checkbox.key == "Create Movies" ||
-					checkbox.key == "Delete Movies" ||
-					checkbox.key == "Update Movies"
+					checkbox.key == "create movies" ||
+					checkbox.key == "delete movies" ||
+					checkbox.key == "update movies"
 				) {
-					return [...prev, checkbox.key, "View Movies"]
+					return [...prev, checkbox.key, "view movies"]
 				} else {
 					return [...prev, checkbox.key]
 				}
 			} else {
-				if (checkbox.key === "View Subscriptions") {
-					// If "View Subscriptions" is unchecked, also uncheck the related permissions
+				if (checkbox.key === "view subscriptions") {
+					// If "view subscriptions" is unchecked, also uncheck the related permissions
 					return prev.filter(
 						(item) =>
-							item !== "Create Subscriptions" &&
-							item !== "Delete Subscriptions" &&
-							item !== "Update Subscriptions" &&
-							item !== "View Subscriptions"
+							item !== "create subscriptions" &&
+							item !== "delete subscriptions" &&
+							item !== "update subscriptions" &&
+							item !== "view subscriptions"
 					)
-				} else if (checkbox.key === "View Movies") {
-					// If "View Movies" is unchecked, also uncheck the related permissions
+				} else if (checkbox.key === "view movies") {
+					// If "view movies" is unchecked, also uncheck the related permissions
 					return prev.filter(
 						(item) =>
-							item !== "Create Movies" &&
-							item !== "Delete Movies" &&
-							item !== "Update Movies" &&
-							item !== "View Movies"
+							item !== "create movies" &&
+							item !== "delete movies" &&
+							item !== "update movies" &&
+							item !== "view movies"
 					)
 				} else {
 					return prev.filter((item) => item !== checkbox.key)
@@ -119,16 +119,15 @@ export const AddUser = ({ onCancel }) => {
 	}
 
 	const permissionCheckboxes = [
-		{ key: "View Subscriptions", label: "View Subscriptions" },
-		{ key: "Create Subscriptions", label: "Create Subscriptions" },
-		{ key: "Delete Subscriptions", label: "Delete Subscriptions" },
-		{ key: "Update Subscriptions", label: "Update Subscriptions" },
-		{ key: "View Movies", label: "View Movies" },
-		{ key: "Create Movies", label: "Create Movies" },
-		{ key: "Delete Movies", label: "Delete Movies" },
-		{ key: "Update Movies", label: "Update Movies" },
+		{ key: "view subscriptions", label: "view subscriptions" },
+		{ key: "create subscriptions", label: "create subscriptions" },
+		{ key: "delete subscriptions", label: "delete subscriptions" },
+		{ key: "update subscriptions", label: "update subscriptions" },
+		{ key: "view movies", label: "view movies" },
+		{ key: "create movies", label: "create movies" },
+		{ key: "delete movies", label: "delete movies" },
+		{ key: "update movies", label: "update movies" },
 	]
-
 	return (
 		<div>
 			<Container
