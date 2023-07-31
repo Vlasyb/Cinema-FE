@@ -3,12 +3,24 @@ import { Button, Container } from "@mui/material"
 import { AllMovies } from "./AllMovies"
 import { AddMovie } from "./AddMovie"
 import { useSelector, useDispatch } from "react-redux"
+import { useLocation } from "react-router-dom"
 
 export const Movies = () => {
 	const dispatch = useDispatch()
 	const movies = useSelector((state) => state.movies)
 	const [addMovieBtn, setAddMovieBtn] = useState(false)
 	const [allMovieBtn, setAllMovieBtn] = useState(false)
+
+	const location = useLocation()
+	const searchParams = new URLSearchParams(location.search)
+	const showMovieId = searchParams.get("showMovieId")
+
+	useEffect(() => {
+		console.log("useEffect - showMovieId: ", showMovieId)
+		if (showMovieId) {
+			changeShow("all")
+		}
+	}, [showMovieId])
 
 	const changeShow = (buttonClicked) => {
 		if (buttonClicked == "all") {
@@ -55,7 +67,9 @@ export const Movies = () => {
 					Add Movie
 				</Button>
 			</Container>
-			{allMovieBtn && <AllMovies moviesPromise={movies} />}
+			{allMovieBtn && (
+				<AllMovies moviesPromise={movies} showMovieId={showMovieId} />
+			)}
 			{addMovieBtn && <AddMovie onCancel={changeShow} />}
 		</div>
 	)

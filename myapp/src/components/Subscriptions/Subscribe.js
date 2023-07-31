@@ -23,24 +23,44 @@ export const Subscribe = ({ member }) => {
 	const moviesState = useSelector((state) => state.movies)
 	const [fullMovies, setFullMovies] = useState([])
 
+	const [movieName, setMovieName] = useState("")
+
 	const [nonWatchedMovies, setNonWatchedMovies] = useState([])
 	const [selectedMovie, setSelectedMovie] = useState("")
 	const [selectedDate, setSelectedDate] = useState("")
+
+	const convertDateFormat = (dateString) => {
+		const dateParts = dateString.split("-")
+		if (dateParts.length === 3) {
+			const [year, month, day] = dateParts
+			return `${day}/${month}/${year}`
+		}
+		return dateString // Return the original string if the format is not as expected
+	}
 
 	// not finished
 	const handleSubscribe = async () => {
 		if (selectedMovie && selectedDate) {
 			try {
-				await axios.post(
-					`http://localhost:${port}/subscribe/${selectedMovie}`,
+				const formattedDate = convertDateFormat(selectedDate)
+				console.log(formattedDate)
+				const { data: movieRes } = await axios.get(
+					`http://localhost:${port}/movies/movie/${selectedMovie}`,
+					{ withCredentials: true }
+				)
+				setMovieName(movieRes.name)
+
+				await axios.put(
+					`http://localhost:${port}/subscriptions/subscribe/${selectedMovie}`,
 					{
 						memberId: member._id,
-						date: selectedDate,
+						date: formattedDate,
 					},
 					{ withCredentials: true }
 				)
 				// Update the movies watched list
 				getMoviesWatched()
+				alert(`Subscribed ${member.name} to ${movieName}`)
 			} catch (error) {
 				console.error("Error subscribing to movie:", error)
 			}
@@ -176,7 +196,7 @@ export const Subscribe = ({ member }) => {
 						<ListItemText
 							primary={
 								<Link
-									to="/movies" // send prop
+									to={`/movies?showMovieId=${movie.movieId}`}
 									style={{ textDecoration: "none", color: "inherit" }}
 								>
 									{

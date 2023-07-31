@@ -74,6 +74,50 @@ export const AddUser = ({ onCancel }) => {
 		handleSave() // Call the handleSave function to create a new user
 	}
 
+	const handleChange = (e, checkbox) => {
+		setPermissions((prev) => {
+			if (e.target.checked) {
+				if (
+					checkbox.key == "Create Subscriptions" ||
+					checkbox.key == "Delete Subscriptions" ||
+					checkbox.key == "Update Subscriptions"
+				) {
+					return [...prev, checkbox.key, "View Subscriptions"]
+				} else if (
+					checkbox.key == "Create Movies" ||
+					checkbox.key == "Delete Movies" ||
+					checkbox.key == "Update Movies"
+				) {
+					return [...prev, checkbox.key, "View Movies"]
+				} else {
+					return [...prev, checkbox.key]
+				}
+			} else {
+				if (checkbox.key === "View Subscriptions") {
+					// If "View Subscriptions" is unchecked, also uncheck the related permissions
+					return prev.filter(
+						(item) =>
+							item !== "Create Subscriptions" &&
+							item !== "Delete Subscriptions" &&
+							item !== "Update Subscriptions" &&
+							item !== "View Subscriptions"
+					)
+				} else if (checkbox.key === "View Movies") {
+					// If "View Movies" is unchecked, also uncheck the related permissions
+					return prev.filter(
+						(item) =>
+							item !== "Create Movies" &&
+							item !== "Delete Movies" &&
+							item !== "Update Movies" &&
+							item !== "View Movies"
+					)
+				} else {
+					return prev.filter((item) => item !== checkbox.key)
+				}
+			}
+		})
+	}
+
 	const permissionCheckboxes = [
 		{ key: "View Subscriptions", label: "View Subscriptions" },
 		{ key: "Create Subscriptions", label: "Create Subscriptions" },
@@ -164,15 +208,7 @@ export const AddUser = ({ onCancel }) => {
 										},
 									}}
 									checked={permissions.includes(checkbox.key)}
-									onChange={(e) =>
-										setPermissions((prev) => {
-											if (e.target.checked) {
-												return [...prev, checkbox.key]
-											} else {
-												return prev.filter((item) => item !== checkbox.key)
-											}
-										})
-									}
+									onChange={(e) => handleChange(e, checkbox)}
 								/>
 							}
 							label={checkbox.label}

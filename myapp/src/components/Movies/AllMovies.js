@@ -3,7 +3,7 @@ import { TextField, Typography, Button, Box, Container } from "@mui/material"
 import { Movie } from "./Movie"
 import axios from "axios"
 
-export const AllMovies = ({ moviesPromise }) => {
+export const AllMovies = ({ moviesPromise, showMovieId }) => {
 	const [movies, setMovies] = useState([])
 	const [searchTerm, setSearchTerm] = useState("")
 	const port = 8040
@@ -30,6 +30,29 @@ export const AllMovies = ({ moviesPromise }) => {
 			setMovies(resolvedMovies)
 		})
 	}, [moviesPromise])
+
+	useEffect(() => {
+		// console.log("movie id is ", showMovieId)
+		const getMovie = async () => {
+			if (showMovieId) {
+				try {
+					const { data: movie } = await axios.get(
+						`http://localhost:${port}/movies/movie/${showMovieId}`,
+						{ withCredentials: true }
+					)
+					setSearchTerm(movie.name)
+
+					setTimeout(() => {
+						handleSearch()
+					}, 1500)
+				} catch (error) {
+					console.error("Error fetching movie:", error)
+				}
+			}
+		}
+
+		getMovie()
+	}, [showMovieId])
 
 	return (
 		<div>
