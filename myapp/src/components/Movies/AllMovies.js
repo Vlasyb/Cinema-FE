@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react"
-import { TextField, Typography, Button, Box, Container } from "@mui/material"
+import {
+	TextField,
+	Typography,
+	Button,
+	Box,
+	Container,
+	Grid,
+} from "@mui/material"
 import { Movie } from "./Movie"
 import axios from "axios"
 
@@ -108,11 +115,18 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 						Find
 					</Button>
 				</Box>
-
-				{movies.map((movie) => {
-					return <Movie movie={movie} key={movie._id} />
-				})}
 			</Container>
+			<Grid
+				container
+				spacing={3}
+				sx={{ paddingLeft: "10%", paddingRight: "10%" }}
+			>
+				{movies.map((movie) => (
+					<Grid item xs={12} sm={6} md={4} key={movie._id}>
+						<Movie movie={movie} />
+					</Grid>
+				))}
+			</Grid>
 		</div>
 	)
 }

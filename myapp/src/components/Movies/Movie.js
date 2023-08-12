@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
-import { Typography, Button, CardContent, Card } from "@mui/material"
+import { Typography, Button, CardContent, Card, Box } from "@mui/material"
 import { useSelector } from "react-redux"
 import axios from "axios"
 
@@ -54,6 +54,7 @@ export const Movie = ({ movie }) => {
 	return (
 		<Card
 			sx={{
+				justifyContent: "space-between",
 				mb: 4,
 				backgroundColor: "white",
 				color: "black",
@@ -61,6 +62,9 @@ export const Movie = ({ movie }) => {
 				":hover": {
 					border: "2px solid #008080",
 				},
+				height: "100%", // Set a fixed height
+				display: "flex",
+				flexDirection: "column",
 			}}
 		>
 			<CardContent>
@@ -87,44 +91,51 @@ export const Movie = ({ movie }) => {
 				))}
 			</CardContent>
 			<CardContent sx={{ display: "flex", justifyContent: "space-around" }}>
-				<Button
-					variant="contained"
-					color="primary"
-					component={Link}
-					to={`/editmovie/${movie._id}`}
+				<Box
 					sx={{
-						width: "25%",
-						backgroundColor: "#008080",
-						fontFamily: "poppins",
-						fontSize: "16px",
-						color: "white",
-						":hover": {
-							border: "1px solid black",
+						display: "flex",
+						justifyContent: "space-around",
+						mt: "auto", // Push buttons to the bottom
+					}}
+				>
+					<Button
+						variant="contained"
+						color="primary"
+						component={Link}
+						to={`/editmovie/${movie._id}`}
+						sx={{
+							width: "25%",
 							backgroundColor: "#008080",
-						},
-					}}
-				>
-					Edit
-				</Button>
-				<Button
-					variant="contained"
-					color="error"
-					onClick={handleDelete}
-					// Add the delete functionality here
-					sx={{
-						width: "25%",
-						backgroundColor: "#c62828",
-						color: "white",
-						fontFamily: "poppins",
-						fontSize: "16px",
-						":hover": {
-							border: "1px solid black",
+							fontFamily: "poppins",
+							fontSize: "16px",
+							color: "white",
+							":hover": {
+								border: "1px solid black",
+								backgroundColor: "#008080",
+							},
+						}}
+					>
+						Edit
+					</Button>
+					<Button
+						variant="contained"
+						color="error"
+						onClick={handleDelete}
+						sx={{
+							width: "25%",
 							backgroundColor: "#c62828",
-						},
-					}}
-				>
-					Delete
-				</Button>
+							color: "white",
+							fontFamily: "poppins",
+							fontSize: "16px",
+							":hover": {
+								border: "1px solid black",
+								backgroundColor: "#c62828",
+							},
+						}}
+					>
+						Delete
+					</Button>
+				</Box>
 			</CardContent>
 		</Card>
 	)
