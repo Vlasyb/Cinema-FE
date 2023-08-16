@@ -27,7 +27,7 @@ export const Brief = () => {
 						component={Link}
 						to="/about"
 						sx={{
-							backgroundColor: "#008080",
+							backgroundColor: "black",
 							position: "absolute",
 							color: "white",
 							fontFamily: "Poppins",
@@ -41,7 +41,7 @@ export const Brief = () => {
 							opacity: "0.95",
 							":hover": {
 								boxShadow: "0 10px 20px rgba(0, 0, 0, 0.2)",
-								backgroundColor: "#008080",
+								backgroundColor: "black",
 								opacity: "1",
 								border: "3px solid black",
 							},

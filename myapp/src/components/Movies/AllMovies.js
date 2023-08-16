@@ -13,6 +13,7 @@ import axios from "axios"
 export const AllMovies = ({ moviesPromise, showMovieId }) => {
 	const [movies, setMovies] = useState([])
 	const [searchTerm, setSearchTerm] = useState("")
+	const [searchedMovieFromParams, setSearchedMovieFromParams] = useState(false)
 	const port = 8040
 
 	const handleSearch = () => {
@@ -22,7 +23,7 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 					withCredentials: true,
 				})
 				.then((response) => {
-					setMovies(response.data)
+					setMovies(response?.data)
 				})
 				.catch((error) => {
 					// Handle errors if any
@@ -33,13 +34,17 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 
 	//understand how the promise works
 	useEffect(() => {
-		moviesPromise.then((resolvedMovies) => {
-			setMovies(resolvedMovies)
-		})
+		const fetchMovies = async () => {
+			moviesPromise?.then((resolvedMovies) => {
+				setMovies(resolvedMovies)
+			})
+		}
+		if (moviesPromise) {
+			fetchMovies()
+		}
 	}, [moviesPromise])
 
 	useEffect(() => {
-		// console.log("movie id is ", showMovieId)
 		const getMovie = async () => {
 			if (showMovieId) {
 				try {
@@ -47,11 +52,8 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 						`http://localhost:${port}/movies/movie/${showMovieId}`,
 						{ withCredentials: true }
 					)
+					setSearchedMovieFromParams(true)
 					setSearchTerm(movie.name)
-
-					setTimeout(() => {
-						handleSearch()
-					}, 1500)
 				} catch (error) {
 					console.error("Error fetching movie:", error)
 				}
@@ -60,6 +62,15 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 
 		getMovie()
 	}, [showMovieId])
+
+	useEffect(() => {
+		console.log(searchedMovieFromParams)
+		if (showMovieId && searchedMovieFromParams) {
+			console.log("from inside")
+			handleSearch()
+			setSearchedMovieFromParams(false)
+		}
+	}, [searchTerm])
 
 	return (
 		<div>
@@ -89,6 +100,7 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 				>
 					<TextField
 						label="Find movie"
+						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 						sx={{
 							// what is inside the input

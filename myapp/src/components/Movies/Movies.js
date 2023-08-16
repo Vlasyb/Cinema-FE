@@ -13,7 +13,10 @@ export const Movies = () => {
 
 	const location = useLocation()
 	const searchParams = new URLSearchParams(location.search)
-	const showMovieId = searchParams.get("showMovieId")
+	// let showMovieId = searchParams.get("showMovieId")
+	const [showMovieId, setShowMovieId] = useState(
+		searchParams.get("showMovieId")
+	)
 
 	useEffect(() => {
 		console.log("useEffect - showMovieId: ", showMovieId)
@@ -22,11 +25,20 @@ export const Movies = () => {
 		}
 	}, [showMovieId])
 
+	const clearShowMovieId = () => {
+		if (showMovieId) {
+			const urlWithoutParam = window.location.href.split("?")[0]
+			window.history.pushState({}, document.title, urlWithoutParam)
+			setShowMovieId(null)
+		}
+	}
+
 	const changeShow = (buttonClicked) => {
 		if (buttonClicked == "all") {
 			setAllMovieBtn(true)
 			setAddMovieBtn(false)
 		} else {
+			clearShowMovieId()
 			setAddMovieBtn(true)
 			setAllMovieBtn(false)
 		}
