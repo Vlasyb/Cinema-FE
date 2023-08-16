@@ -174,23 +174,43 @@ export const NavBar = () => {
 							Users Managment
 						</Button>
 					</Stack>
-					<Button
-						sx={{
-							marginLeft: "auto",
-							fontSize: "100%",
-							fontFamily: "Poppins",
-							color: "white",
-							visibility: loggedUser.username ? "visible" : "hidden",
-						}}
-						component={Link}
-						to="/login"
-						startIcon={<ExitToAppIcon />}
-						variant="text"
-						color="inherit"
-						onClick={handleLogout}
-					>
-						Logout
-					</Button>
+					{loggedUser.username ? (
+						<Button
+							sx={{
+								marginLeft: "auto",
+								fontSize: "100%",
+								fontFamily: "Poppins",
+								color: "white",
+								visibility: loggedUser.username ? "visible" : "hidden",
+							}}
+							component={Link}
+							to="/login"
+							startIcon={<ExitToAppIcon />}
+							variant="text"
+							color="inherit"
+							onClick={handleLogout}
+						>
+							Logout
+						</Button>
+					) : (
+						<Button
+							sx={{
+								marginLeft: "auto",
+								fontSize: "100%",
+								fontFamily: "Poppins",
+								color: "white",
+								visibility: loggedUser.username ? "hidden" : "visible",
+							}}
+							component={Link}
+							to="/login"
+							startIcon={<ExitToAppIcon />}
+							variant="text"
+							color="inherit"
+							onClick={handleLogout}
+						>
+							Login
+						</Button>
+					)}
 				</Toolbar>
 			</AppBar>
 		</div>
