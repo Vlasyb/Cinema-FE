@@ -129,20 +129,24 @@ export const EditUser = () => {
 	]
 
 	useEffect(() => {
-		users.then((users) => {
-			console.log("users:", users)
-			if (Array.isArray(users) && users.length !== 0) {
-				const foundUser = users.find((user) => user.username == username)
-				console.log("found user:", foundUser)
-				if (foundUser) {
-					setCurrUser(foundUser)
-					console.log("user set")
-				} else {
-					// Handle case when user is not found
-					console.log("User not found")
+		try {
+			users.then((users) => {
+				console.log("users:", users)
+				if (Array.isArray(users) && users.length !== 0) {
+					const foundUser = users.find((user) => user.username == username)
+					console.log("found user:", foundUser)
+					if (foundUser) {
+						setCurrUser(foundUser)
+						console.log("user set")
+					} else {
+						// Handle case when user is not found
+						console.log("User not found")
+					}
 				}
-			}
-		})
+			})
+		} catch (error) {
+			console.log("Haven't resolved promise yet:", error)
+		}
 	}, [users, username, currUser])
 	return (
 		<div>

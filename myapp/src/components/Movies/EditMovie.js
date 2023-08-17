@@ -21,13 +21,6 @@ export const EditMovie = () => {
 	const [message, setMessage] = useState("")
 	const [errorMessage, setErrorMessage] = useState("")
 
-	// const updatedMovie = {
-	// 	...currMovie,
-	// 	name,
-	// 	genres,
-	// 	image,
-	// 	premiered,
-	// }
 	const handleUpdate = async (e) => {
 		e.preventDefault()
 		// Create the updated user object and call the onSave function
@@ -63,18 +56,22 @@ export const EditMovie = () => {
 	}
 
 	useEffect(() => {
-		movies.then((movies) => {
-			if (Array.isArray(movies) && movies.length !== 0) {
-				const foundMovie = movies.find((movie) => movie._id === movieId)
-				if (foundMovie) {
-					setCurrMovie(foundMovie)
-				} else {
-					// Handle case when movie is not found
-					console.log("Movie not found")
+		try {
+			movies.then((movies) => {
+				if (Array.isArray(movies) && movies.length !== 0) {
+					const foundMovie = movies.find((movie) => movie._id === movieId)
+					if (foundMovie) {
+						setCurrMovie(foundMovie)
+					} else {
+						// Handle case when movie is not found
+						console.log("Movie not found")
+					}
 				}
-			}
-			console.log("CURRENT MOVIE:", currMovie)
-		})
+				console.log("CURRENT MOVIE:", currMovie)
+			})
+		} catch (error) {
+			console.log("Haven't resolved promise yet:", error)
+		}
 	}, [movies, movieId, currMovie])
 
 	return (

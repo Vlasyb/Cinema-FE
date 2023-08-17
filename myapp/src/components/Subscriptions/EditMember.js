@@ -51,20 +51,26 @@ export const EditMember = () => {
 	}
 
 	useEffect(() => {
-		members.then((resolvedMembers) => {
-			console.log("members:", resolvedMembers)
-			if (Array.isArray(resolvedMembers) && resolvedMembers.length !== 0) {
-				const foundMember = resolvedMembers.find((member) => member._id === id)
-				console.log("found member:", foundMember)
-				if (foundMember) {
-					setCurrMember(foundMember)
-					console.log("member set")
-				} else {
-					// Handle case when member is not found
-					console.log("Member not found")
+		try {
+			members.then((resolvedMembers) => {
+				console.log("members:", resolvedMembers)
+				if (Array.isArray(resolvedMembers) && resolvedMembers.length !== 0) {
+					const foundMember = resolvedMembers.find(
+						(member) => member._id === id
+					)
+					console.log("found member:", foundMember)
+					if (foundMember) {
+						setCurrMember(foundMember)
+						console.log("member set")
+					} else {
+						// Handle case when member is not found
+						console.log("Member not found")
+					}
 				}
-			}
-		})
+			})
+		} catch (error) {
+			console.log("Haven't resolved promise yet:", error)
+		}
 	}, [members, id, currMember])
 
 	return (
