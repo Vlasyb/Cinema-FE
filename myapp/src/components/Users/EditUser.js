@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react"
-import { Link, useParams } from "react-router-dom"
+import { Link, useParams, useNavigate } from "react-router-dom"
 import { Success } from "../Success"
 import { Error } from "../Error"
 import axios from "axios"
@@ -11,13 +11,14 @@ import {
 	Checkbox,
 	Container,
 } from "@mui/material"
-import { useSelector } from "react-redux"
-import { useDispatch } from "react-redux"
+import { useSelector, useDispatch } from "react-redux"
 
 export const EditUser = () => {
 	const port = 8040
 
 	const dispatch = useDispatch()
+	const navigate = useNavigate()
+
 	const users = useSelector(((state) => state.users) || [])
 	const [currUser, setCurrUser] = useState({})
 	const { username } = useParams()
@@ -37,15 +38,17 @@ export const EditUser = () => {
 
 	const handleUpdate = async (e) => {
 		e.preventDefault()
-		// Create the updated user object and call the onSave function
 		const updatedUser = {
-			// ...currUser,
 			firstName: firstName == "" ? currUser.firstName : firstName,
 			lastName: lastName == "" ? currUser.lastName : lastName,
-			username: usernameContainer == "" ? currUser.username : usernameContainer,
+			// username: usernameContainer == "" ? currUser.username : usernameContainer,
 			sessionTimeOut:
 				sessionTimeOut == "" ? currUser.sessionTimeOut : sessionTimeOut,
 			permissions,
+		}
+
+		if (usernameContainer !== "") {
+			updatedUser.username = usernameContainer
 		}
 		try {
 			const { data: res } = await axios.put(
@@ -53,17 +56,25 @@ export const EditUser = () => {
 				updatedUser,
 				{ withCredentials: true }
 			)
+			if (usernameContainer !== "") {
+				navigate(`/edituser/${usernameContainer}`)
+			}
 			console.log("SAVING ", res)
 			setFirstName("")
 			setLastName("")
 			setUsernameContainer("")
 			setSessionTimeOut("")
 			setPermissions([])
-			// dispatch("LOAD_USERS")
-			setMessage(res)
+			if (res !== "Updated") {
+				setErrorMessage(res)
+			} else {
+				setMessage(res)
+			}
 			setTimeout(() => {
 				setMessage("")
+				setErrorMessage("")
 			}, 2500)
+			// dispatch("LOAD_USERS")
 		} catch (err) {
 			setErrorMessage(err)
 			setTimeout(() => {
@@ -137,7 +148,6 @@ export const EditUser = () => {
 					console.log("found user:", foundUser)
 					if (foundUser) {
 						setCurrUser(foundUser)
-						console.log("user set")
 					} else {
 						// Handle case when user is not found
 						console.log("User not found")
