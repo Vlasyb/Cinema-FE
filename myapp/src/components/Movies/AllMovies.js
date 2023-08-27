@@ -14,10 +14,11 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 	const [movies, setMovies] = useState([])
 	const [searchTerm, setSearchTerm] = useState("")
 	const [searchedMovieFromParams, setSearchedMovieFromParams] = useState(false)
+	const [page, setPage] = useState(0)
 	const port = 8040
 
 	const handleSearch = () => {
-		if (searchTerm != "") {
+		if (searchTerm !== "") {
 			axios
 				.get(`http://localhost:${port}/movies/findmovie/${searchTerm}`, {
 					withCredentials: true,
@@ -32,17 +33,55 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 		}
 	}
 
-	//understand how the promise works
+	const fetchPaginatedMovies = async () => {
+		try {
+			const response = await axios.get(
+				`http://localhost:${port}/movies/paginatedMovies/${page}/10`,
+				{
+					withCredentials: true,
+				}
+			)
+			setMovies((prevMovies) => [...prevMovies, ...response?.data])
+		} catch (error) {
+			console.error("Error loading movies:", error)
+		}
+	}
+
 	useEffect(() => {
-		const fetchMovies = async () => {
-			moviesPromise?.then((resolvedMovies) => {
-				setMovies(resolvedMovies)
-			})
+		fetchPaginatedMovies()
+	}, [])
+
+	const handleScroll = () => {
+		const windowHeight = window.innerHeight
+		const windowScroll = window.scrollY
+		const documentHeight = document.documentElement.scrollHeight
+
+		if (documentHeight - (windowScroll + windowHeight) < 100) {
+			setPage((prevPage) => prevPage + 1)
 		}
-		if (moviesPromise) {
-			fetchMovies()
+	}
+	useEffect(() => {
+		window.addEventListener("scroll", handleScroll)
+		console.log("added event listener")
+		return () => {
+			window.removeEventListener("scroll", handleScroll)
 		}
-	}, [moviesPromise])
+	}, [])
+
+	useEffect(() => {
+		if (page > 1 && searchTerm === "") fetchPaginatedMovies()
+	}, [page])
+
+	// useEffect(() => {
+	// 	const fetchMovies = async () => {
+	// 		moviesPromise?.then((resolvedMovies) => {
+	// 			setMovies(resolvedMovies)
+	// 		})
+	// 	}
+	// 	if (moviesPromise) {
+	// 		fetchMovies()
+	// 	}
+	// }, [moviesPromise])
 
 	useEffect(() => {
 		const getMovie = async () => {
@@ -71,6 +110,13 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 			setSearchedMovieFromParams(false)
 		}
 	}, [searchTerm])
+
+	const handleSearchTermChange = (e) => {
+		setSearchTerm(e.target.value)
+		if (searchTerm !== "") {
+			window.removeEventListener("scroll", handleScroll)
+		}
+	}
 
 	return (
 		<div>
@@ -101,7 +147,7 @@ export const AllMovies = ({ moviesPromise, showMovieId }) => {
 					<TextField
 						label="Find movie"
 						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
+						onChange={(e) => handleSearchTermChange(e)}
 						sx={{
 							// what is inside the input
 							"& .MuiInputBase-input": {

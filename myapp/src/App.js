@@ -51,7 +51,6 @@ function App() {
 	}
 
 	useEffect(() => {
-		console.log("App UseEffect with dispatches -------------------")
 		if (typeof loggedUser.then === "function") {
 			// The loggedUser is a promise, so wait for it to resolve
 			loggedUser.then((loggedUserResolved) => {
